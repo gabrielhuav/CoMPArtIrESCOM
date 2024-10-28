@@ -1,30 +1,31 @@
-package ovh.gabrielhuav.escom.compartir.auth.model;
+package ovh.gabrielhuav.escom.compartir.auth.entity;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "roles")
 public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol")
-    private Long idRol;
+    private Long id;
 
-    @Column(name = "nombre", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     @ManyToMany(mappedBy = "roles")
-    private Set<Usuario> usuarios;
+    private Set<Usuario> usuarios = new HashSet<>();
 
-    // Getters y Setters
-    public Long getIdRol() {
-        return idRol;
+    // Getters y setters
+
+    public Long getId() {
+        return id;
     }
 
-    public void setIdRol(Long idRol) {
-        this.idRol = idRol;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {

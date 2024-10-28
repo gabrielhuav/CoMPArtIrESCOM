@@ -1,35 +1,49 @@
 package ovh.gabrielhuav.escom.compartir.auth.config;
 
+import ovh.gabrielhuav.escom.compartir.auth.service.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
+    // Bean para el CustomAuthenticationSuccessHandler
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
     }
 
+    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()  // Deshabilitar CSRF para simplificar pruebas
-            .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/login", "/home").permitAll()  // Permitir acceso sin autenticación a estas rutas
-                .requestMatchers("/imagenes/**", "/css/**", "/js/**", "/webjars/**").permitAll()  // Permitir acceso a recursos estáticos
-                .anyRequest().authenticated()  // Proteger todas las demás rutas
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/home").authenticated()
+                .anyRequest().permitAll()
+            )
+            .formLogin((form) -> form
+                .loginPage("/login")
+                .successHandler(customAuthenticationSuccessHandler())  // Usar el handler personalizado
+                .permitAll()
+            )
+            .logout((logout) -> logout.permitAll())
+            .exceptionHandling()
+            .accessDeniedHandler(new AccessDeniedHandlerImpl())  // Manejador de acceso denegado
+            .accessDeniedPage("/accessDenied")  // Redirigir a la página de acceso denegado
             .and()
-            .logout()
-                .logoutUrl("/logout")  // URL para deslogueo
-                .logoutSuccessUrl("/auth/login")  // Redirige al login después del logout
-                .permitAll();
+            .csrf().disable();
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

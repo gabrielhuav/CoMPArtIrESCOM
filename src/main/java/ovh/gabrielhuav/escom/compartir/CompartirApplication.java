@@ -7,9 +7,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "ovh.gabrielhuav.escom.compartir")
+@ComponentScan(basePackages = {
+    "ovh.gabrielhuav.escom.compartir.auth.config",
+    "ovh.gabrielhuav.escom.compartir.auth.controller",
+    "ovh.gabrielhuav.escom.compartir.auth.entity",
+    "ovh.gabrielhuav.escom.compartir.auth.repository",
+    "ovh.gabrielhuav.escom.compartir.auth.service",
+    "ovh.gabrielhuav.escom.compartir.auth.SistemaAutenticacion"
+})
 @EnableJpaRepositories(basePackages = "ovh.gabrielhuav.escom.compartir.auth.repository")
-@EntityScan(basePackages = "ovh.gabrielhuav.escom.compartir.auth.model")
+@EntityScan(basePackages = "ovh.gabrielhuav.escom.compartir.auth.entity")
 public class CompartirApplication {
     public static void main(String[] args) {
         SpringApplication.run(CompartirApplication.class, args);

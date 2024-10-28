@@ -1,9 +1,10 @@
 package ovh.gabrielhuav.escom.compartir.auth.repository;
 
-import ovh.gabrielhuav.escom.compartir.auth.model.Usuario;
+import ovh.gabrielhuav.escom.compartir.auth.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByCorreo(String correo);
+    Usuario findByNombre(String nombre);  // EL campo es "nombre"
 }

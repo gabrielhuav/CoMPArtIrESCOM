@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
+    <title>Registro Exitoso</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -31,6 +31,10 @@
             color: #fff;
         }
 
+        p {
+            font-size: 16px;
+        }
+
         a {
             color: #4CAF50;
             text-decoration: none;
@@ -45,8 +49,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenido a tu página principal</h1>
-        <a href="/logout">Cerrar Sesión</a>
+        <h1>Registro exitoso</h1>
+        <p>¡Te has registrado correctamente! Aquí están tus datos:</p>
+        <p><strong>Nombre:</strong> <span th:text="${usuario.nombre}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${usuario.email}"></span></p>
+        <a href="/login">Ir a login</a>
     </div>
 </body>
 </html>
+
+    <
