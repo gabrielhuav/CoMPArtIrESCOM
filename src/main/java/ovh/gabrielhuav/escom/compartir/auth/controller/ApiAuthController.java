@@ -1,3 +1,4 @@
+// ApiAuthController.java
 package ovh.gabrielhuav.escom.compartir.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,34 +8,29 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import ovh.gabrielhuav.escom.compartir.auth.entity.Usuario;
-import ovh.gabrielhuav.escom.compartir.auth.repository.UsuarioRepository;
+import org.springframework.web.bind.annotation.*;
+import ovh.gabrielhuav.escom.compartir.auth.service.CustomUserDetailsService;
 
 @RestController
+@RequestMapping("/api/auth")
 public class ApiAuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private CustomUserDetailsService userDetailsService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginCredentials credentials) {
+    public ResponseEntity<String> login(@RequestBody LoginCredentials credentials) {
         try {
-            // Intenta autenticar al usuario con el AuthenticationManager
-            Authentication auth = authenticationManager.authenticate(
+            Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.getCorreo(), credentials.getPassword())
             );
 
-            // Si la autenticación es exitosa, devuelve el estado 200
-            return ResponseEntity.ok("Login successful");
-
+            // Retornar un mensaje o un token según sea necesario
+            return ResponseEntity.ok("Login successful for API");
         } catch (AuthenticationException e) {
-            // Si la autenticación falla, devuelve el estado 401
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
         }
     }
